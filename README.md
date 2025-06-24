@@ -28,7 +28,7 @@ Table of Contents
 
 - Django 5.2.3: Web framework for rapid development and clean design.
 - Django REST Framework: Toolkit for building Web APIs.
-- SQLite: Lightweight database for development (configurable for production).
+- PostgreSQL: Replaces SQLite as the primary database for development and production.
 - Simple JWT: JSON Web Token authentication for secure user access.
 - DRF-YASG: Swagger/OpenAPI documentation generator.
 - Django Filters: Dynamic query filtering for API endpoints.
@@ -71,8 +71,24 @@ pytest-django==4.9.0
 
 4. Set Up the Database
 
-```bash
-python manage.py migrate
+This project uses **PostgreSQL**.
+
+Make sure to configure the following environment variables:
+
+- `DB_NAME`
+- `DB_USER`
+- `DB_PASSWORD`
+- `DB_HOST`
+- `DB_PORT`
+
+Example `.env`:
+
+```env
+DB_NAME=minishop
+DB_USER=user1
+DB_PASSWORD=123123
+DB_HOST=localhost
+DB_PORT=5432
 ```
 
 5. Run the Development Server
@@ -149,10 +165,32 @@ pytest
 ## Authentication
 
 - JWT Authentication: All endpoints except /register/, `/swagger/`, and `/redoc/` require authentication.
-  Permissions: The `IsOwner` permission ensures users can only access their own data.
+- Permissions: The `IsOwner` permission ensures users can only access their own data.
 - Token Management:
   - Obtain tokens via `/api/token/`.
   - Refresh tokens via `/api/token/refresh/`.
+
+## Upcoming Features
+
+The following features are planned to improve scalability, maintainability, and learning outcomes:
+
+- Docker Support
+  Containerization of the entire application stack (PostgreSQL, Django, Redis, Celery) for consistent development and deployment environments.
+
+- Celery + Redis Integration
+  Asynchronous task queue for handling background jobs such as sending confirmation emails, report generation, or long-running database operations.
+
+- API Rate Limiting & Throttling
+  Implement request throttling to protect the API from abuse and ensure fair usage.
+
+- CI/CD with GitHub Actions
+  Automate testing and deployment workflows using GitHub Actions for faster and safer delivery pipelines.
+
+- Full-Text Search with PostgreSQL
+  Enhance product search capabilities using PostgreSQL’s powerful full-text search.
+
+- API Versioning
+  Introduce versioning for the API to support future changes while maintaining backward compatibility.
 
 ## Contributing
 
