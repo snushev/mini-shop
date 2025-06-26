@@ -28,11 +28,13 @@ Table of Contents
 
 - Django 5.2.3: Web framework for rapid development and clean design.
 - Django REST Framework: Toolkit for building Web APIs.
-- PostgreSQL: Replaces SQLite as the primary database for development and production.
 - Simple JWT: JSON Web Token authentication for secure user access.
 - DRF-YASG: Swagger/OpenAPI documentation generator.
 - Django Filters: Dynamic query filtering for API endpoints.
 - Pytest: Testing framework for comprehensive unit and integration tests.
+- Docker: Containerization platform
+- Docker Compose: Multi-container orchestration
+- PostgreSQL: Database container
 
 ## Installation
 
@@ -45,59 +47,46 @@ cd minishop-api
 
 2. Set Up a Virtual Environment
 
-```bash
-python -m venv venv
-source venv/bin/activate
-venv\Scripts\activate
-```
+- Create .env file (copy from .env.example)
 
-3. Install Dependencies
+- Configure your environment variables (DB credentials, SECRET_KEY, etc.)
+
+3. Start with Docker
 
 ```bash
-pip install -r requirements.txt
+docker-compose up -d --build
 ```
 
-Note: Create a `requirements.txt` with the following dependencies:
-
-```plain
-django==5.2.3
-djangorestframework==3.15.2
-djangorestframework-simplejwt==5.3.1
-drf-yasg==1.21.7
-django-filter==24.3
-pytest==8.3.2
-pytest-django==4.9.0
-```
-
-4. Set Up the Database
-
-This project uses **PostgreSQL**.
-
-Make sure to configure the following environment variables:
-
-- `DB_NAME`
-- `DB_USER`
-- `DB_PASSWORD`
-- `DB_HOST`
-- `DB_PORT`
-
-Example `.env`:
-
-```env
-DB_NAME=minishop
-DB_USER=user1
-DB_PASSWORD=123123
-DB_HOST=localhost
-DB_PORT=5432
-```
-
-5. Run the Development Server
+4. Create Superuser (optional)
 
 ```bash
-python manage.py runserver
+docker-compose exec web python manage.py createsuperuser
 ```
 
 Access the API at `http://localhost:8000`.
+
+## Docker Configuration
+
+The project includes:
+
+- `Dockerfile` for the Django application
+- `docker-compose.yml` for the complete stack (Django + PostgreSQL)
+- `.env.example` for environment variables template
+
+Key containers:
+
+- `web`: Django application
+- `db`: PostgreSQL database
+
+## Development with Docker
+
+Common commands:
+
+- Start containers: `docker-compose up -d`
+- Stop containers: `docker-compose down`
+- View logs: `docker-compose logs -f`
+- Run tests: `docker-compose exec web pytest`
+- Run management commands: `docker-compose exec web python manage.py [command]`
 
 ## Usage
 
@@ -145,9 +134,15 @@ Access the API at `http://localhost:8000`.
 
 The project includes comprehensive tests for all API endpoints using Pytest.
 
-1. Run Tests
+1. To run tests:
 
 ```bash
+# Using Docker
+docker-compose exec web pytest
+```
+
+```bash
+# Or locally (with activated virtualenv)
 pytest
 ```
 
@@ -173,9 +168,6 @@ pytest
 ## Upcoming Features
 
 The following features are planned to improve scalability, maintainability, and learning outcomes:
-
-- Docker Support
-  Containerization of the entire application stack (PostgreSQL, Django, Redis, Celery) for consistent development and deployment environments.
 
 - Celery + Redis Integration
   Asynchronous task queue for handling background jobs such as sending confirmation emails, report generation, or long-running database operations.
